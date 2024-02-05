@@ -47,6 +47,7 @@ class LivreController extends AbstractController
 
             $entityManager->persist($livre);
             $entityManager->flush();
+            $this->addFlash('success', 'Your changes have been saved successfully.');
 
             return $this->redirectToRoute('app_livre_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -89,6 +90,7 @@ class LivreController extends AbstractController
             }
 
             $entityManager->flush();
+            $this->addFlash('success', 'Your changes have been saved successfully.');
 
             return $this->redirectToRoute('app_livre_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -98,7 +100,7 @@ class LivreController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
+
     #[Route('/{id}', name: 'app_livre_delete', methods: ['POST'])]
     public function delete(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {

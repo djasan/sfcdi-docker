@@ -1,4 +1,4 @@
-/* ul {
+ul {
   list-style: none;
 }
 
@@ -18,16 +18,29 @@ footer nav ul {
 
 .avatar {
   max-width: 3rem;
+  transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
+}
+
+.avatar:hover {
+  transform: scale(1.2); /* Enlarge the avatar on hover */
 }
 
 a {
-  color: rgb(49, 95, 180);
-} */
+  color: rgb(198, 204, 214);
+  text-decoration: none; /* Remove default underline */
+  transition: color 0.3s ease-in-out; /* Add a smooth color transition effect */
+}
+
+a:hover {
+  color: rgb(29, 69, 150); /* Darken the color on hover */
+}
 
 .genre::after {
   content: ',';
- }
+  transition: opacity 0.3s ease-in-out; /* Add a smooth opacity transition effect */
+}
 
-.genre:last-of-type::after {
+.genre:hover::after {
   content: '';
+  opacity: 0.7; /* Reduce opacity on hover */
 }

@@ -4,6 +4,12 @@
 
 {% block body %}
     <h1>Livre index</h1>
+    {% for message in app.flashes('success') %}
+<div id="banner" class="banner alert alert-success">
+    <span class="close-btn" onclick="this.parentElement.style.display='none';">X</span>
+    {{ message }}
+</div>
+{% endfor %}
 
     <table class="table">
         <thead>
@@ -28,7 +34,7 @@
                 <td>{{ livre.auteur }}</td>
                 <td>{{ livre.isbn }}</td>
                 <td>{{ livre.datePublication ? livre.datePublication|date('Y-m-d') : '' }}</td>
-                <td>{{ livre.image }}</td>
+                <td> <img src="{{ asset(livre.image) }}" alt="Image du livre"></td>
                 <td>{{ livre.resume }}</td>
                 <td>
                     <a href="{{ path('app_livre_show', {'id': livre.id}) }}">show</a>
