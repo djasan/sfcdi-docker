@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 #[Route('/livre')]
 class LivreController extends AbstractController
@@ -22,7 +23,7 @@ class LivreController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
+  #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $livre = new Livre();
@@ -30,6 +31,20 @@ class LivreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $imageFile = $form->get('image')->getData();
+
+            $destination = $this->getParameter('kernel.project_dir') . '/public/upload/covers_livre';
+            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+            try {
+                $imageFile->move($destination, $newFilename);
+            } catch (FileException $e) {
+            }
+
+            $livre->setImage('/upload/covers_livre/'.$newFilename);
+
             $entityManager->persist($livre);
             $entityManager->flush();
 
@@ -38,9 +53,10 @@ class LivreController extends AbstractController
 
         return $this->render('livre/new.html.twig', [
             'livre' => $livre,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
+
 
     #[Route('/{id}', name: 'app_livre_show', methods: ['GET'])]
     public function show(Livre $livre): Response
@@ -57,6 +73,21 @@ class LivreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('image')->getData();
+
+            if ($imageFile) {
+                $destination = $this->getParameter('kernel.project_dir') . '/public/upload/covers_livre';
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                try {
+                    $imageFile->move($destination, $newFilename);
+                } catch (FileException $e) {
+                }
+
+                $livre->setImage('/upload/covers_livre/'.$newFilename);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('app_livre_index', [], Response::HTTP_SEE_OTHER);
@@ -64,10 +95,10 @@ class LivreController extends AbstractController
 
         return $this->render('livre/edit.html.twig', [
             'livre' => $livre,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
-
+    
     #[Route('/{id}', name: 'app_livre_delete', methods: ['POST'])]
     public function delete(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {
