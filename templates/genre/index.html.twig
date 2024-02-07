@@ -8,28 +8,46 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Description</th>
-                <th>actions</th>
+                <th>
+                    <label for="select-id">Id</label>
+                    <select id="select-id">
+                        <option value="asc">Ascendant</option>
+                        <option value="desc">Descendant</option>
+                    </select>
+                </th>
+                <th>
+                    <label for="select-nom">Nom</label>
+                    <select id="select-nom">
+                        <option value="asc">Ascendant</option>
+                        <option value="desc">Descendant</option>
+                    </select>
+                </th>
+                <th>
+                    <label for="select-description">Description</label>
+                    <select id="select-description">
+                        <option value="asc">Ascendant</option>
+                        <option value="desc">Descendant</option>
+                    </select>
+                </th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for genre in genres %}
-            <tr>
-                <td>{{ genre.id }}</td>
-                <td>{{ genre.nom }}</td>
-                <td>{{ genre.description }}</td>
-                <td>
-                    <a href="{{ path('app_genre_show', {'id': genre.id}) }}">show</a>
-                    <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
+            {% for genre in genres %}
+                <tr class="genre-row">
+                    <td>{{ genre.id }}</td>
+                    <td>{{ genre.nom }}</td>
+                    <td>{{ genre.description }}</td>
+                    <td>
+                        <a href="{{ path('app_genre_show', {'id': genre.id}) }}">show</a>
+                        <a href="{{ path('app_genre_edit', {'id': genre.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 

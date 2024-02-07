@@ -6,6 +6,36 @@
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         <link rel="stylesheet" href="{{asset("/assets/css/style.css")}}">
+  <style>
+            /* Ajoutez le code CSS ici */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            select {
+                padding: 5px;
+            }
+
+            a {
+                text-decoration: none;
+                color: #3498db;
+                margin-right: 10px;
+            }
+
+            a:hover {
+                color: #2980b9;
+            }
+        </style>
+
+
         {% endblock %}
 
         {% block javascripts %}
