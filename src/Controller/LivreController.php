@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Repository\GenreRepository;
 
 #[Route('/livre')]
 class LivreController extends AbstractController
@@ -23,7 +24,7 @@ class LivreController extends AbstractController
         ]);
     }
 
-  #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_livre_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $livre = new Livre();
@@ -36,14 +37,14 @@ class LivreController extends AbstractController
 
             $destination = $this->getParameter('kernel.project_dir') . '/public/upload/covers_livre';
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+            $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
             try {
                 $imageFile->move($destination, $newFilename);
             } catch (FileException $e) {
             }
 
-            $livre->setImage('/upload/covers_livre/'.$newFilename);
+            $livre->setImage('/upload/covers_livre/' . $newFilename);
 
             $entityManager->persist($livre);
             $entityManager->flush();
@@ -60,10 +61,13 @@ class LivreController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_livre_show', methods: ['GET'])]
-    public function show(Livre $livre): Response
+    public function show(Livre $livre, GenreRepository $genreRepository, int $id): Response
     {
+        $genres = $livre->getGenre();
+
         return $this->render('livre/show.html.twig', [
             'livre' => $livre,
+            'genres' => $genres,
         ]);
     }
 
@@ -79,14 +83,14 @@ class LivreController extends AbstractController
             if ($imageFile) {
                 $destination = $this->getParameter('kernel.project_dir') . '/public/upload/covers_livre';
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $newFilename = $originalFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+                $newFilename = $originalFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
 
                 try {
                     $imageFile->move($destination, $newFilename);
                 } catch (FileException $e) {
                 }
 
-                $livre->setImage('/upload/covers_livre/'.$newFilename);
+                $livre->setImage('/upload/covers_livre/' . $newFilename);
             }
 
             $entityManager->flush();
@@ -104,7 +108,7 @@ class LivreController extends AbstractController
     #[Route('/{id}', name: 'app_livre_delete', methods: ['POST'])]
     public function delete(Request $request, Livre $livre, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$livre->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $livre->getId(), $request->request->get('_token'))) {
             $entityManager->remove($livre);
             $entityManager->flush();
         }
